@@ -107,6 +107,15 @@ function markdownToHtml(raw) {
   return html;
 }
 
+function frontmatter(raw) {
+  const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
+  if (!match) return {};
+  return Object.fromEntries(match[1].split(/\r?\n/).flatMap((line) => {
+    const item = /^([\w-]+):\s*["']?(.+?)["']?\s*$/.exec(line);
+    return item ? [[item[1], item[2]]] : [];
+  }));
+}
+
 function shell({ title, description, body, article = false }) {
   return `<!doctype html>
 <html lang="zh-CN">
@@ -132,13 +141,13 @@ function projectCard(project) {
 async function build() {
   await rm(outputDir, { recursive: true, force: true });
   await mkdir(path.join(outputDir, "writing"), { recursive: true });
-  const files = (await readdir(contentDir)).filter((file) => file.endsWith(".md")).sort();
+  const files = (await readdir(contentDir)).filter((file) => file.endsWith(".md") && !file.startsWith("_")).sort();
   const articles = [];
 
   for (const file of files) {
     const slug = file.replace(/\.md$/, "");
-    const meta = articleMeta[slug] ?? { title: slug.replaceAll("-", " "), category: "Writing", date: "" };
     const source = await readFile(path.join(contentDir, file), "utf8");
+    const meta = { title: slug.replaceAll("-", " "), category: "Writing", date: "", ...articleMeta[slug], ...frontmatter(source) };
     const html = markdownToHtml(source);
     articles.push({ slug, ...meta });
     const articleBody = `<main class="article-wrap"><a class="back-link" href="../#writing">← Writing</a><article class="article"><p class="eyebrow">${meta.category}${meta.date ? ` · ${meta.date}` : ""}</p><h1>${meta.title}</h1><div class="article-content">${html}</div></article></main>`;
