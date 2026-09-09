@@ -126,7 +126,7 @@ function shell({ title, description, body, article = false }) {
 }
 
 function projectCard(project) {
-  return `<article class="project-card"><div class="project-order">${project.order}</div><div><p class="eyebrow">${project.en}</p><h3>${project.name}</h3><p class="project-description">${project.description}</p><p>${project.detail}</p><div class="tags">${project.tags.map((tag) => `<span>${tag}</span>`).join("")}</div><p class="links"><a href="${project.repo}" target="_blank" rel="noreferrer">GitHub ↗</a><a href="${project.live}" target="_blank" rel="noreferrer">在线体验 ↗</a></p></div></article>`;
+  return `<article class="project-card project-${project.order}"><div class="project-order">/${project.order}</div><div><p class="eyebrow">${project.en}</p><h3>${project.name}</h3><p class="project-description">${project.description}</p><p>${project.detail}</p><div class="tags">${project.tags.map((tag) => `<span>${tag}</span>`).join("")}</div><p class="links"><a href="${project.repo}" target="_blank" rel="noreferrer">源码 ↗</a><a href="${project.live}" target="_blank" rel="noreferrer">打开作品 ↗</a></p></div></article>`;
 }
 
 async function build() {
@@ -147,7 +147,7 @@ async function build() {
 
   const articleCards = articles.map((article) => `<a class="article-card" href="writing/${article.slug}.html"><span>${article.category}</span><h3>${article.title}</h3><small>${article.date}</small></a>`).join("");
   const home = `<main>
-    <section class="intro"><p class="eyebrow">Independent developer · China University of Mining and Technology</p><h1>把模糊的意图，<br>做成可运行、可验证的 AI 产品。</h1><p class="intro-copy">黄毅 / melondy101。关注学习、思考与行动之间那些容易被忽略的断点，并把它们做成可以亲手体验的系统。</p><p class="links"><a href="#projects">查看作品 ↓</a><a href="https://github.com/melondy101" target="_blank" rel="noreferrer">GitHub ↗</a></p></section>
+    <section class="intro"><div class="intro-copyblock"><p class="eyebrow">黄毅 / Independent developer</p><h1>一些还在<br>变成现实的想法。</h1><p class="intro-copy">我把学习、思考与行动里容易断掉的那一步，做成能亲手体验的 AI 系统。</p></div><div class="desk" aria-label="探索者工作台"><a class="desk-note note-build" href="#projects"><small>正在构建</small><strong>把模糊意图<br>变成下一步</strong><span>打开作品 ↓</span></a><a class="desk-note note-think" href="#writing"><small>最近在想</small><strong>掌握感<br>不是能力</strong><span>阅读文章 ↗</span></a><a class="desk-note note-gradus" href="https://talk-task.vercel.app/" target="_blank" rel="noreferrer"><small>作品 / 01</small><strong>Gradus</strong><span>在线体验 ↗</span></a><a class="desk-note note-zhiheng" href="https://zhiheng-4yvv7zg1f-2014596548-3040s-projects.vercel.app" target="_blank" rel="noreferrer"><small>作品 / 02</small><strong>ZhiHeng</strong><span>在线体验 ↗</span></a></div></section>
     <section id="projects" class="section"><p class="eyebrow">Selected work</p><h2>作品</h2><div class="projects">${projects.map(projectCard).join("")}</div></section>
     <section id="writing" class="section writing"><p class="eyebrow">Writing</p><h2>思考与笔记</h2><p class="section-copy">关于学习如何发生、行动如何延续，以及我在技术学习中留下的解释。</p><div class="article-grid">${articleCards}</div></section>
     <section id="about" class="about"><p class="eyebrow">About</p><h2>我如何做事</h2><p>先把问题做成能走通的 Demo；让 AI 提供结构、生成与检索，但不掩饰它的来源与失败；把关键选择留给使用工具的人。</p><p>我参与过 Datawhale、Watcha 等学习社区的助教与学习活动，也持续在开源与 AI 系统中学习。</p></section>
