@@ -22,7 +22,7 @@ Vercel 项目应将 **Root Directory** 设置为 `vercel-app`。仓库根目录�
 
 ## Neon 与邮件
 
-生产数据库使用 `vercel-app/db/migrations/0001_account.sql` 和 `0002_self_managed_auth.sql` 所定义的表。后续改表时先新增迁移文件，再在目标 Neon 分支执行；不要直接编辑已应用的迁移。
+生产数据库使用 `vercel-app/db/migrations/0001_account.sql`、`0002_self_managed_auth.sql` 和 `0003_handle_change_schedule.sql` 所定义的表。后续改表时先新增迁移文件，再在目标 Neon 分支执行；不要直接编辑已应用的迁移。
 
 在 Vercel 中：
 

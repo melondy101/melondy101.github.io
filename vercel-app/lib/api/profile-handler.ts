@@ -27,6 +27,9 @@ export function createProfileHandler(dependencies: {
       if (error instanceof Error && error.message === "HANDLE_TAKEN") {
         return Response.json({ error: "该账号已被使用。" }, { status: 409 });
       }
+      if (error instanceof Error && error.message === "HANDLE_CHANGE_LIMIT") {
+        return Response.json({ error: "公开账号每个自然月只能修改一次。" }, { status: 429 });
+      }
       return Response.json({ error: "资料暂时无法保存。" }, { status: 500 });
     }
   };

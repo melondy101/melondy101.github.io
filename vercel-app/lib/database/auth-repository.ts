@@ -26,7 +26,14 @@ export const authRepository = {
     return rows[0] as Omit<User, "passwordHash"> | undefined ?? null;
   },
   async create(input: { email: string; emailLower: string; passwordHash: string; name: string }) {
-    const rows = await database()`insert into users (email, email_lower, password_hash, name) values (${input.email}, ${input.emailLower}, ${input.passwordHash}, ${input.name}) returning id, email, name`;
+    const rows = await database()`with inserted_user as (
+      insert into users (email, email_lower, password_hash, name)
+      values (${input.email}, ${input.emailLower}, ${input.passwordHash}, ${input.name})
+      returning id, email, name
+    ), inserted_profile as (
+      insert into profiles (auth_user_id, last_name, nickname, handle)
+      select id, '未填写', name, 'u_' || left(replace(id::text, '-', ''), 20) from inserted_user
+    ) select id, email, name from inserted_user`;
     return rows[0] as Omit<User, "passwordHash">;
   },
   async updatePassword(emailLower: string, passwordHash: string) {

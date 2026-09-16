@@ -27,6 +27,11 @@ export const accountRepository = {
   async updateProfile(authUserId: string, profile: ProfileInput) {
     const sql = database();
     try {
+      const existingRows = await sql`select handle, handle_updated_at is not null and handle_updated_at >= date_trunc('month', now() at time zone 'Asia/Shanghai') at time zone 'Asia/Shanghai' as "handleChangeLocked" from profiles where auth_user_id = ${authUserId}`;
+      const existing = existingRows[0] as { handle: string; handleChangeLocked: boolean } | undefined;
+      if (existing && existing.handle !== profile.handle && existing.handleChangeLocked) {
+        throw new Error("HANDLE_CHANGE_LIMIT");
+      }
       const rows = await sql`
         insert into profiles (auth_user_id, last_name, nickname, handle)
         values (${authUserId}, ${profile.lastName}, ${profile.nickname}, ${profile.handle})
@@ -34,6 +39,7 @@ export const accountRepository = {
           last_name = excluded.last_name,
           nickname = excluded.nickname,
           handle = excluded.handle,
+          handle_updated_at = case when profiles.handle <> excluded.handle then now() else profiles.handle_updated_at end,
           updated_at = now()
         returning auth_user_id as "userId", last_name as "lastName", nickname, handle
       `;
