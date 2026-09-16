@@ -20,7 +20,7 @@
 
 - 动态应用：Next.js App Router，运行在 Vercel。
 - 认证：Neon Auth（托管 Better Auth）。它负责认证账户、密码哈希、会话、邮箱验证和密码重置；业务代码不得自行保存或读取密码明文。
-- 数据库：Neon PostgreSQL。Vercel Neon Integration 向 Vercel 环境注入连接变量。
+- 数据库：Neon PostgreSQL。已有 Neon 项目通过 Vercel 的 Environment Variables 手动提供连接变量；不要通过 Marketplace 创建一个无关的新 Neon 资源。
 - 邮件：QQ 邮箱 SMTP。使用 QQ 邮箱“授权码”而不是邮箱登录密码发送验证和重置邮件。
 - 数据访问：服务端路由和服务端组件使用带连接池的 PostgreSQL 连接；浏览器不能获得 `DATABASE_URL`。
 
@@ -84,7 +84,7 @@ article_favorites
 
 1. GitHub Pages 继续从 `dist/` 成功发布并能访问首页和文章。
 2. Vercel 从 `vercel-app` 构建动态站，并能以 `*.vercel.app` 预览。
-3. Vercel Neon Integration 完成后，生产环境使用 Neon PostgreSQL，预览环境使用隔离的 Neon 分支。
+3. Vercel 的生产环境配置已有 Neon 项目的连接变量；预览环境如需隔离，使用单独的 Neon 分支和对应变量。
 4. 自有域名绑定到 Vercel，并添加至 Neon Auth 的可信域名。
 5. 以新用户验证：注册、接收 QQ 邮箱验证码、验证、登录、退出、修改资料，并仅在文章详情页完成收藏和取消收藏。
 6. 验证未认证用户无法读取或修改资料和收藏；确认页面、响应和日志均不包含密码、SMTP 授权码或数据库连接串。

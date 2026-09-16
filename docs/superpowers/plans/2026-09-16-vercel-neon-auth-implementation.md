@@ -4,7 +4,7 @@
 
 - Vercel 项目 `melondy101-github-io` 保持关联当前 GitHub 仓库。
 - 在 Vercel 项目设置中将 Root Directory 设置为 `vercel-app`。
-- 通过 Vercel Marketplace 连接 Neon Integration，并启用 Neon Auth。
+- 在既有 Neon 项目中启用 Neon Auth，并把连接变量手动配置到 Vercel；不要通过 Marketplace 创建一个无关的新 Neon 资源。
 - 在 Neon Auth 中配置 QQ SMTP 授权码、生产域名和本地开发域名。
 
 ## 实施顺序
