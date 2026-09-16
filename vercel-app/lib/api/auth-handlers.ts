@@ -70,8 +70,8 @@ export function createAuthenticationHandlers(dependencies: AuthenticationDepende
       const identity = normalizedEmail(parsed.data.email);
       if (!await dependencies.limit("send_code", request, identity.emailLower)) return Response.json({ error: "操作过于频繁，请稍后再试。" }, { status: 429 });
       if (codePurpose === "reset_password" && !await dependencies.users.findByEmail(identity.emailLower)) return Response.json({ ok: true });
-      const result = await dependencies.verification.send({ ...identity, purpose: codePurpose });
       await dependencies.recordAttempt("send_code", request, identity.emailLower);
+      const result = await dependencies.verification.send({ ...identity, purpose: codePurpose });
       return result.accepted ? Response.json({ ok: true }) : Response.json({ error: "验证码暂时无法发送。" }, { status: 503 });
     },
     async login(request: Request) {

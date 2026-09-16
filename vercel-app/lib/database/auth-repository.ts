@@ -56,12 +56,25 @@ export const authRepository = {
   async allow(kind: string, ip: string, emailLower?: string) {
     const sql = database();
     const emailHash = emailLower ? digest(`email:${emailLower}`) : null;
-    const rows = await sql`select count(*) filter (where attempted_at > now() - interval '15 minutes')::int as "windowCount", count(*) filter (where attempted_at > now() - interval '60 seconds')::int as "recentCount" from auth_attempts where kind = ${kind} and (ip = ${ip} or (${emailHash}::text is not null and email_hash = ${emailHash}))`;
-    const record = rows[0] as { windowCount: number; recentCount: number };
-    if (kind === "send_code") return Number(record.windowCount) < 3 && Number(record.recentCount) === 0;
+    const rows = await sql`select
+      count(*) filter (where attempted_at > now() - interval '15 minutes' and (ip = ${ip} or (${emailHash}::text is not null and email_hash = ${emailHash})))::int as "windowCount",
+      count(*) filter (where attempted_at > now() - interval '60 seconds' and (ip = ${ip} or (${emailHash}::text is not null and email_hash = ${emailHash})))::int as "recentCount",
+      count(*) filter (where attempted_at > now() - interval '1 hour')::int as "globalHourlyCount",
+      count(*) filter (where attempted_at >= date_trunc('day', now() at time zone 'Asia/Shanghai') at time zone 'Asia/Shanghai')::int as "globalDailyCount",
+      count(*) filter (where attempted_at >= date_trunc('day', now() at time zone 'Asia/Shanghai') at time zone 'Asia/Shanghai' and ip = ${ip})::int as "ipDailyCount",
+      count(*) filter (where attempted_at >= date_trunc('day', now() at time zone 'Asia/Shanghai') at time zone 'Asia/Shanghai' and (${emailHash}::text is not null and email_hash = ${emailHash}))::int as "emailDailyCount"
+      from auth_attempts where kind = ${kind}`;
+    const record = rows[0] as { windowCount: number; recentCount: number; globalHourlyCount: number; globalDailyCount: number; ipDailyCount: number; emailDailyCount: number };
+    if (kind === "send_code") return Number(record.windowCount) < 3 && Number(record.recentCount) === 0 && Number(record.globalHourlyCount) < 15 && Number(record.globalDailyCount) < 100 && Number(record.ipDailyCount) < 20 && Number(record.emailDailyCount) < 5;
     return Number(record.windowCount) < 10;
   },
   async record(kind: string, ip: string, emailLower?: string) {
     await database()`insert into auth_attempts (ip, email_hash, kind) values (${ip}, ${emailLower ? digest(`email:${emailLower}`) : null}, ${kind})`;
+  },
+  async cleanupExpiredAuthData() {
+    const sql = database();
+    const expiredCodes = await sql`delete from email_verifications where expires_at < now()`;
+    const oldAttempts = await sql`delete from auth_attempts where attempted_at < now() - interval '24 hours'`;
+    return { expiredCodes: expiredCodes.length, oldAttempts: oldAttempts.length };
   }
 };
