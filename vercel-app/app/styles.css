@@ -1,6 +1,8 @@
 :root { color-scheme: light; font-family: Arial, "PingFang SC", sans-serif; color: #1f2933; background: #fbfaf7; }
 * { box-sizing: border-box; }
 body { margin: 0; }
+.site-header { min-height: 56px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; border-bottom: 1px solid #e4e0d8; }
+.site-header nav { display: flex; gap: 16px; align-items: center; }
 .shell { max-width: 720px; margin: 0 auto; padding: 72px 24px; }
 .eyebrow { color: #765f3d; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; }
 h1 { font-size: clamp(2.2rem, 8vw, 4.5rem); line-height: 1.08; margin: .2em 0; }

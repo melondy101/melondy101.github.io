@@ -1,5 +1,5 @@
 import { createFavoriteHandler } from "@/lib/api/favorite-handler";
-import { currentUserId } from "@/lib/auth/server";
+import { currentUserId } from "@/lib/auth/session";
 import { accountRepository } from "@/lib/database/account-repository";
 
 const handler = createFavoriteHandler({

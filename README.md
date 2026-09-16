@@ -37,4 +37,4 @@ npm run dev
 - [架构说明](docs/architecture.md)：部署边界、认证和数据模型。
 - [接口与用户流程](docs/integration-guide.md)：动态路由、API 认证边界与收藏行为。
 - [运维手册](docs/operations.md)：环境变量、Neon、QQ SMTP、域名与验收步骤。
-- [原始设计](docs/superpowers/specs/2026-09-16-vercel-neon-auth-design.md) 与 [实施计划](docs/superpowers/plans/2026-09-16-vercel-neon-auth-implementation.md)：第一版范围和实现决策。
+- [当前认证设计](docs/superpowers/specs/2026-09-16-self-managed-qq-smtp-auth-design.md) 与 [实施计划](docs/superpowers/plans/2026-09-16-self-managed-qq-smtp-auth-implementation.md)：自管 QQ SMTP 认证的范围和实施决策。

@@ -9,21 +9,25 @@ Vercel 项目应将 **Root Directory** 设置为 `vercel-app`。仓库根目录�
 | 变量 | 可见性 | 用途 |
 | --- | --- | --- |
 | `DATABASE_URL` | Secret | Neon PostgreSQL 的生产池化连接串 |
-| `NEON_AUTH_BASE_URL` | Secret | Neon Auth 服务端基础地址 |
-| `NEON_AUTH_COOKIE_SECRET` | Secret | 至少 32 个随机字符，用于认证 Cookie |
+| `AUTH_JWT_SECRET` | Secret | 至少 32 个随机字符，用于本站 JWT Cookie 签名 |
+| `AUTH_CODE_SECRET` | Secret | 与 JWT 密钥不同，用于验证码与邮箱摘要 HMAC |
+| `QQ_EMAIL_USER` | Secret | 完整 QQ 邮箱地址 |
+| `QQ_EMAIL_PASS` | Secret | QQ 邮箱 SMTP 授权码，不是登录密码 |
+| `SMTP_HOST`、`SMTP_PORT` | Config | `smtp.qq.com` 与 `465` |
+| `EMAIL_FROM` | Config | 邮件显示发件人 |
 | `NEXT_PUBLIC_SITE_URL` | Config | 生产站点地址，例如 `https://baobaodae.dpdns.org` |
 
 前缀为 `NEXT_PUBLIC_` 的变量会打包给浏览器，因此 Vercel 要求它使用 **Config** 而非 **Secret**；它只能保存公开 URL，绝不能保存密码、授权码或连接串。
 
 ## Neon 与邮件
 
-生产数据库使用 `vercel-app/db/migrations/0001_account.sql` 所定义的业务表。后续改表时先新增迁移文件，再在目标 Neon 分支执行；不要直接编辑已应用的迁移。
+生产数据库使用 `vercel-app/db/migrations/0001_account.sql` 和 `0002_self_managed_auth.sql` 所定义的表。后续改表时先新增迁移文件，再在目标 Neon 分支执行；不要直接编辑已应用的迁移。
 
-在 Neon Auth 中：
+在 Vercel 中：
 
-1. 将 Vercel 预览域名和 `https://baobaodae.dpdns.org` 加入可信域名。
-2. 配置 QQ SMTP：发件邮箱使用完整 QQ 邮箱地址，密码字段使用 QQ 邮箱生成的 SMTP 授权码，不是 QQ 登录密码。
-3. 保存后用一个测试邮箱走一遍注册、收信、验证和登录。不要把测试邮件截图中的授权码或会话 Cookie 发到公共渠道。
+1. 配置 `.env.example` 所列变量；生产和预览分别使用合适的数据库连接串与密钥。
+2. QQ SMTP 使用完整 QQ 邮箱地址和 QQ 邮箱生成的 SMTP 授权码，不是 QQ 登录密码；端口必须是 465，启用 SSL。
+3. 保存后用一个测试邮箱走一遍注册、收信、登录和重置密码。不要把测试邮件截图中的授权码或会话 Cookie 发到公共渠道。
 
 ## 域名与部署检查
 
@@ -33,10 +37,10 @@ DigitalPlat 中，根记录 `@` 的 A 记录必须指向 Vercel 域名页面给�
 
 ```powershell
 Invoke-WebRequest https://baobaodae.dpdns.org/sign-in
-Invoke-WebRequest https://baobaodae.dpdns.org/api/auth/get-session
+Invoke-WebRequest https://baobaodae.dpdns.org/api/auth/me
 ```
 
-未登录访问 `get-session` 返回 `null` 是正常现象；它说明认证路由可达，不等于邮件发送已通过。还应手动验证注册、QQ 邮件、登录、资料更新和文章详情页的收藏切换。
+未登录访问 `me` 返回 `user: null` 是正常现象；它说明认证路由可达，不等于邮件发送已通过。还应手动验证注册、QQ 邮件、登录、重置密码、资料更新和文章详情页的收藏切换。
 
 ## 常见构建错误
 

@@ -1,5 +1,5 @@
 import { createProfileHandler } from "@/lib/api/profile-handler";
-import { currentUserId } from "@/lib/auth/server";
+import { currentUserId } from "@/lib/auth/session";
 import { accountRepository } from "@/lib/database/account-repository";
 
 const handler = createProfileHandler({
