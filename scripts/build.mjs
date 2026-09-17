@@ -4,29 +4,7 @@ import path from "node:path";
 const root = process.cwd();
 const contentDir = path.join(root, "content", "writing");
 const outputDir = path.join(root, "dist");
-
-const projects = [
-  {
-    order: "01",
-    name: "拾级 · Gradus",
-    en: "Gradus",
-    description: "把模糊的学习目标，变成有真实资源支撑、能排进日程的下一步。",
-    detail: "从意图识别、资源检索与核验，到 Bloom 认知层级拆解、全局排期和复习节点，Gradus 试图缩短“想学”与“开始学”之间的距离。",
-    repo: "https://github.com/melondy101/Gradus",
-    live: "https://talk-task.vercel.app/",
-    tags: ["Next.js", "AI planning", "Learning systems"]
-  },
-  {
-    order: "02",
-    name: "知研 · ZhiHeng",
-    en: "ZhiHeng",
-    description: "一个不替人下结论的 AI 思辨陪练。",
-    detail: "知研把报告、来源状态、观点引导、多轮诘问与成果卡连接成一条可追溯的思考路径；当真实服务不可用时，也要明确展示缓存、fixture 与本地降级。",
-    repo: "https://github.com/melondy101/zhiheng",
-    live: "https://zhiheng-4yvv7zg1f-2014596548-3040s-projects.vercel.app",
-    tags: ["Next.js", "Trustworthy AI", "Thinking tools"]
-  }
-];
+const projects = JSON.parse(await readFile(path.join(root, "content", "projects.json"), "utf8"));
 
 const articleMeta = {
   "behavioral-residual-heat": { title: "行为的残余热量", category: "学习与行动", date: "2026.05" },
@@ -156,7 +134,7 @@ async function build() {
 
   const articleCards = articles.map((article) => `<a class="article-card" href="writing/${article.slug}.html"><span>${article.category}</span><h3>${article.title}</h3><small>${article.date}</small></a>`).join("");
   const home = `<main>
-    <section class="intro"><div class="intro-copyblock"><p class="eyebrow">黄毅 / Independent developer</p><h1>一些还在<br>变成现实的想法。</h1><p class="intro-copy">我把学习、思考与行动里容易断掉的那一步，做成能亲手体验的 AI 系统。</p></div><div class="desk" aria-label="探索者工作台"><a class="desk-note note-build" href="#projects"><small>正在构建</small><strong>把模糊意图<br>变成下一步</strong><span>打开作品 ↓</span></a><a class="desk-note note-think" href="#writing"><small>最近在想</small><strong>掌握感<br>不是能力</strong><span>阅读文章 ↗</span></a><a class="desk-note note-gradus" href="https://talk-task.vercel.app/" target="_blank" rel="noreferrer"><small>作品 / 01</small><strong>Gradus</strong><span>在线体验 ↗</span></a><a class="desk-note note-zhiheng" href="https://zhiheng-4yvv7zg1f-2014596548-3040s-projects.vercel.app" target="_blank" rel="noreferrer"><small>作品 / 02</small><strong>ZhiHeng</strong><span>在线体验 ↗</span></a></div></section>
+    <section class="intro"><div class="intro-copyblock"><p class="eyebrow">黄毅 / Independent developer</p><h1>一些还在<br>变成现实的想法。</h1><p class="intro-copy">我把学习、思考与行动里容易断掉的那一步，做成能亲手体验的 AI 系统。</p></div><div class="desk" aria-label="探索者工作台"><a class="desk-note note-build" href="#projects"><small>正在构建</small><strong>把模糊意图<br>变成下一步</strong><span>打开作品 ↓</span></a><a class="desk-note note-think" href="#writing"><small>最近在想</small><strong>掌握感<br>不是能力</strong><span>阅读文章 ↗</span></a>${projects.map((project) => `<a class="desk-note note-${project.en.toLowerCase()}" href="${project.live}" target="_blank" rel="noreferrer"><small>作品 / ${project.order}</small><strong>${project.en}</strong><span>在线体验 ↗</span></a>`).join("")}</div></section>
     <section id="projects" class="section"><p class="eyebrow">Selected work</p><h2>作品</h2><div class="projects">${projects.map(projectCard).join("")}</div></section>
     <section id="writing" class="section writing"><p class="eyebrow">Writing</p><h2>思考与笔记</h2><p class="section-copy">关于学习如何发生、行动如何延续，以及我在技术学习中留下的解释。</p><div class="article-grid">${articleCards}</div></section>
     <section id="about" class="about"><p class="eyebrow">About</p><h2>我如何做事</h2><p>先把问题做成能走通的 Demo；让 AI 提供结构、生成与检索，但不掩饰它的来源与失败；把关键选择留给使用工具的人。</p><p>我参与过 Datawhale、Watcha 等学习社区的助教与学习活动，也持续在开源与 AI 系统中学习。</p></section>

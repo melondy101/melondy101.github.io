@@ -1,0 +1,22 @@
+[
+  {
+    "order": "01",
+    "name": "拾级 · Gradus",
+    "en": "Gradus",
+    "description": "把模糊的学习目标，变成有真实资源支撑、可安排进日程的认知级学习计划。",
+    "detail": "从意图解析、真实资源检索与链接核验，到 Bloom 认知阶梯拆解、可行性自检、全局接续排期与间隔复习，Gradus 把“想学”推进到下一步；也支持访客先用、注册接管和 MCP 接入。",
+    "repo": "https://github.com/melondy101/Gradus",
+    "live": "https://talk-task.vercel.app/",
+    "tags": ["Next.js", "AI planning", "MCP learning system"]
+  },
+  {
+    "order": "02",
+    "name": "知研 · ZhiHeng",
+    "en": "ZhiHeng",
+    "description": "让 AI 通过追问帮助人打磨观点，而不是替人下结论。",
+    "detail": "知研把知乎与全网报告、引用与来源状态、观点引导、温和自适应诘问和六段可追溯成果卡连成一条思考路径；真实服务不可用时，明确区分 live、cache、fixture 与本地降级。",
+    "repo": "https://github.com/melondy101/zhiheng",
+    "live": "https://zhiheng-4yvv7zg1f-2014596548-3040s-projects.vercel.app",
+    "tags": ["Next.js", "Trustworthy AI", "Thinking companion"]
+  }
+]
