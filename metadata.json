@@ -1,0 +1,6 @@
+{
+  "name": "melondy101",
+  "description": "黄毅的独立开发与 AI 产品作品集",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

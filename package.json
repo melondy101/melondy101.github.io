@@ -2,7 +2,14 @@
   "name": "melondy101.github.io",
   "private": true,
   "version": "1.0.0",
+  "workspaces": [
+    "vercel-app"
+  ],
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "dev": "npm run dev --workspace=vercel-app",
+    "build": "npm run build --workspace=vercel-app",
+    "start": "npm run start --workspace=vercel-app",
+    "lint": "npm run lint --workspace=vercel-app",
+    "build:static": "node scripts/build.mjs"
   }
 }

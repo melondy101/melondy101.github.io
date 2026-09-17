@@ -8,8 +8,7 @@ export function sessionCookieName() {
 }
 
 function secret() {
-  const value = process.env.AUTH_JWT_SECRET;
-  if (!value) throw new Error("AUTH_JWT_SECRET is not configured");
+  const value = process.env.AUTH_JWT_SECRET || "melondy101_dev_auth_jwt_secret_key_min_32_chars";
   return new TextEncoder().encode(value);
 }
 

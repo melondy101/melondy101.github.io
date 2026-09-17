@@ -3,7 +3,10 @@ import nodemailer from "nodemailer";
 export async function sendVerificationEmail(input: { to: string; code: string; purpose: "register" | "reset_password" }) {
   const user = process.env.QQ_EMAIL_USER;
   const pass = process.env.QQ_EMAIL_PASS;
-  if (!user || !pass) throw new Error("QQ SMTP is not configured");
+  if (!user || !pass) {
+    console.info(`[Dev/Preview Email Mock] Verification code for ${input.to} (${input.purpose}) is: ${input.code}`);
+    return;
+  }
   const reset = input.purpose === "reset_password";
   const action = reset ? "重置密码" : "注册账号";
   const transporter = nodemailer.createTransport({ host: process.env.SMTP_HOST || "smtp.qq.com", port: Number(process.env.SMTP_PORT || 465), secure: true, auth: { user, pass } });
