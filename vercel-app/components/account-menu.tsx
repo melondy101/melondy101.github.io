@@ -12,34 +12,40 @@ export default function AccountMenu({ user }: { user: User }) {
   const menuRef = useRef<HTMLDetailsElement>(null);
   const pathname = usePathname();
 
-  // Close the dropdown when route changes (e.g., clicking personal center or jumping back to home)
+  // Close the dropdown when route changes
   useEffect(() => {
     setIsOpen(false);
+    if (menuRef.current) {
+      menuRef.current.open = false;
+    }
   }, [pathname]);
 
-  // Handle click outside and Escape key to close the dropdown
+  // Robust click outside and Escape key listeners
   useEffect(() => {
-    if (!isOpen) return;
-
     function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        menuRef.current.open = false;
       }
     }
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsOpen(false);
+        if (menuRef.current) {
+          menuRef.current.open = false;
+        }
       }
     }
 
-    document.addEventListener("pointerdown", handleClickOutside);
+    // Attach document-level listeners unconditionally so any click outside is captured
+    document.addEventListener("click", handleClickOutside, true);
     document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("pointerdown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside, true);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, []);
 
   const handleToggle = (e: React.SyntheticEvent<HTMLDetailsElement>) => {
     setIsOpen(e.currentTarget.open);
@@ -47,6 +53,9 @@ export default function AccountMenu({ user }: { user: User }) {
 
   const handleClose = () => {
     setIsOpen(false);
+    if (menuRef.current) {
+      menuRef.current.open = false;
+    }
   };
 
   return (

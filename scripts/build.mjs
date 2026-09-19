@@ -127,9 +127,24 @@ async function build() {
     const source = await readFile(path.join(contentDir, file), "utf8");
     const meta = { title: slug.replaceAll("-", " "), category: "Writing", date: "", ...articleMeta[slug], ...frontmatter(source) };
     const html = markdownToHtml(source);
-    articles.push({ slug, ...meta });
-    const articleBody = `<main class="article-wrap"><a class="back-link" href="../#writing">← Writing</a><article class="article"><p class="eyebrow">${meta.category}${meta.date ? ` · ${meta.date}` : ""}</p><h1>${meta.title}</h1><div class="article-content">${html}</div></article></main>`;
-    await writeFile(path.join(outputDir, "writing", `${slug}.html`), shell({ title: meta.title, description: meta.title, body: articleBody, article: true }));
+    articles.push({ slug, ...meta, html });
+  }
+
+  for (const article of articles) {
+    const related = articles
+      .filter((a) => a.slug !== article.slug && a.category === article.category)
+      .slice(0, 3);
+    const fallback = related.length < 2
+      ? articles.filter((a) => a.slug !== article.slug && a.category !== article.category).slice(0, 3 - related.length)
+      : [];
+    const suggested = [...related, ...fallback].slice(0, 3);
+
+    const relatedHtml = suggested.length > 0
+      ? `<section class="related-articles" id="related-articles"><p class="eyebrow">Related Articles</p><h2>相关阅读</h2><div class="related-grid">${suggested.map((item) => `<a class="related-card" href="${item.slug}.html"><span>${item.category}</span><h3>${item.title}</h3><small>${item.date}</small></a>`).join("")}</div></section>`
+      : "";
+
+    const articleBody = `<main class="article-wrap"><a class="back-link" href="../#writing">← Writing</a><article class="article"><p class="eyebrow">${article.category}${article.date ? ` · ${article.date}` : ""}</p><h1>${article.title}</h1><div class="article-content">${article.html}</div></article>${relatedHtml}</main>`;
+    await writeFile(path.join(outputDir, "writing", `${article.slug}.html`), shell({ title: article.title, description: article.title, body: articleBody, article: true }));
   }
 
   const articleCards = articles.map((article) => `<a class="article-card" href="writing/${article.slug}.html"><span>${article.category}</span><h3>${article.title}</h3><small>${article.date}</small></a>`).join("");
@@ -137,7 +152,7 @@ async function build() {
     <section class="intro"><div class="intro-copyblock"><p class="eyebrow">黄毅 / Independent developer</p><h1>一些还在<br>变成现实的想法。</h1><p class="intro-copy">我把学习、思考与行动里容易断掉的那一步，做成能亲手体验的 AI 系统。</p></div><div class="desk" aria-label="探索者工作台"><a class="desk-note note-build" href="#projects"><small>正在构建</small><strong>把模糊意图<br>变成下一步</strong><span>打开作品 ↓</span></a><a class="desk-note note-think" href="#writing"><small>最近在想</small><strong>掌握感<br>不是能力</strong><span>阅读文章 ↗</span></a>${projects.map((project) => `<a class="desk-note note-${project.en.toLowerCase()}" href="${project.live}" target="_blank" rel="noreferrer"><small>作品 / ${project.order}</small><strong>${project.en}</strong><span>在线体验 ↗</span></a>`).join("")}</div></section>
     <section id="projects" class="section"><p class="eyebrow">Selected work</p><h2>作品</h2><div class="projects">${projects.map(projectCard).join("")}</div></section>
     <section id="writing" class="section writing"><p class="eyebrow">Writing</p><h2>思考与笔记</h2><p class="section-copy">关于学习如何发生、行动如何延续，以及我在技术学习中留下的解释。</p><div class="article-grid">${articleCards}</div></section>
-    <section id="about" class="about"><p class="eyebrow">About</p><h2>我如何做事</h2><p>先把问题做成能走通的 Demo；让 AI 提供结构、生成与检索，但不掩饰它的来源与失败；把关键选择留给使用工具的人。</p><p>我参与过 Datawhale、Watcha 等学习社区的助教与学习活动，也持续在开源与 AI 系统中学习。</p></section>
+    <section id="about" class="about"><p class="eyebrow">About</p><h2>我如何做事</h2><p>先把问题做成能走通的 Demo；让 AI 提供结构、生成与检索，但不掩饰它的来源与失败；把关键选择留给使用工具的人。</p><p>我参与过 Datawhale、Watcha 等学习社区的助教与学习活动，也持续在开源与 AI 系统中学习。</p><div class="about-contact-row"><span class="contact-label">联系我 / Contact:</span><a class="contact-link" href="mailto:dae201459@gmail.com">dae201459@gmail.com ↗</a><span class="contact-sep">/</span><a class="contact-link" href="https://github.com/melondy101" target="_blank" rel="noreferrer">GitHub ↗</a></div></section>
   </main>`;
   await writeFile(path.join(outputDir, "index.html"), shell({ title: "黄毅 / melondy101", description: "黄毅的独立开发与 AI 产品作品集", body: home }));
   await cp(path.join(root, "styles.css"), path.join(outputDir, "styles.css"));

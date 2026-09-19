@@ -1,13 +1,31 @@
 import Link from "next/link";
-
-const articles = [
-  ["behavioral-residual-heat", "行为的残余热量"],
-  ["purposeful-concept-expansion", "没有明确目的的概念扩张"],
-  ["mastery-is-not-ability", "掌握感不是能力"],
-  ["thinking-is-not-action", "思考代替行动"],
-  ["lagrange-duality", "Where the Name ‘Lagrange Duality’ Comes From"]
-];
+import { getAllArticles } from "@/lib/articles";
 
 export default function WritingPage() {
-  return <main className="shell"><p className="eyebrow">Writing</p><h1>思考与笔记</h1><ul>{articles.map(([slug, title]) => <li key={slug}><Link href={`/writing/${slug}`}>{title}</Link></li>)}</ul></main>;
+  const articles = getAllArticles();
+
+  return (
+    <main className="shell">
+      <div className="article-top-nav" style={{ marginBottom: "20px" }}>
+        <Link className="back-link" href="/">
+          ← 返回首页
+        </Link>
+      </div>
+      <p className="eyebrow">Writing</p>
+      <h1>思考与笔记</h1>
+      <p className="section-copy" style={{ margin: "0 0 32px", color: "#6b7366" }}>
+        关于学习如何发生、行动如何延续，以及我在技术学习中留下的解释。
+      </p>
+      <div className="article-grid">
+        {articles.map((article) => (
+          <Link className="article-card" href={`/writing/${article.slug}`} key={article.slug}>
+            <span>{article.category}</span>
+            <h3>{article.title}</h3>
+            <small>{article.date}</small>
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
 }
+

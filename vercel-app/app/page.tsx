@@ -1,6 +1,5 @@
 import Link from "next/link";
 import projects from "../../content/projects.json";
-import { MotionSection } from "@/components/motion-section";
 
 const articles = [
   ["behavioral-residual-heat", "学习与行动", "行为的残余热量", "2026.05"],
@@ -13,7 +12,7 @@ const articles = [
 export default function HomePage() {
   return (
     <main>
-      <MotionSection className="intro">
+      <section className="intro">
         <div className="intro-copyblock">
           <p className="eyebrow">黄毅 / Independent developer</p>
           <h1>一些还在<br />变成现实的想法。</h1>
@@ -38,9 +37,9 @@ export default function HomePage() {
             </a>
           ))}
         </div>
-      </MotionSection>
+      </section>
 
-      <MotionSection id="projects" className="section">
+      <section id="projects" className="section">
         <p className="eyebrow">Selected work</p>
         <h2>作品</h2>
         <div className="projects">
@@ -61,9 +60,9 @@ export default function HomePage() {
             </article>
           ))}
         </div>
-      </MotionSection>
+      </section>
 
-      <MotionSection id="writing" className="section writing">
+      <section id="writing" className="section writing">
         <p className="eyebrow">Writing</p>
         <h2>思考与笔记</h2>
         <p className="section-copy">关于学习如何发生、行动如何延续，以及我在技术学习中留下的解释。</p>
@@ -76,14 +75,26 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-      </MotionSection>
+      </section>
 
-      <MotionSection id="about" className="about">
+      <section id="about" className="about">
         <p className="eyebrow">About</p>
         <h2>我如何做事</h2>
         <p>先把问题做成能走通的 Demo；让 AI 提供结构、生成与检索，但不掩饰它的来源与失败；把关键选择留给使用工具的人。</p>
         <p>我参与过 Datawhale、Watcha 等学习社区的助教与学习活动，也持续在开源与 AI 系统中学习。</p>
-      </MotionSection>
+
+        <div className="about-contact-row">
+          <span className="contact-label">联系我 / Contact:</span>
+          <a className="contact-link" href="mailto:dae201459@gmail.com">
+            dae201459@gmail.com ↗
+          </a>
+          <span className="contact-sep">/</span>
+          <a className="contact-link" href="https://github.com/melondy101" target="_blank" rel="noreferrer">
+            GitHub ↗
+          </a>
+        </div>
+      </section>
     </main>
   );
 }
+
