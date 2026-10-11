@@ -82,6 +82,11 @@ export default function HomePage() {
         <h2>我如何做事</h2>
         <p>先把问题做成能走通的 Demo；让 AI 提供结构、生成与检索，但不掩饰它的来源与失败；把关键选择留给使用工具的人。</p>
         <p>我参与过 Datawhale、Watcha 等学习社区的助教与学习活动，也持续在开源与 AI 系统中学习。</p>
+        <p>
+          我也把实际使用的工具流程和项目整理方法制作成数字工具包，在
+          <a href="https://afdian.com/a/baobaodae" target="_blank" rel="noreferrer">爱发电「抱抱大鹅」</a>
+          持续更新。目前准备中的产品包括 PDF 电子书转 EPUB Agent 技能包与 AI 和数据项目经历整理包，具体可购买状态以爱发电商品页面为准。
+        </p>
 
         <div className="about-contact-row">
           <span className="contact-label">联系我 / Contact:</span>
